@@ -86,7 +86,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
-        'PORT': '3360',
+        'PORT': '3306',
         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
     }
 }
@@ -134,6 +134,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 django_heroku.settings(locals())
 
 try:
-    from local_settings import *
+    from local_settings import DATABASES
 except ImportError:
     pass

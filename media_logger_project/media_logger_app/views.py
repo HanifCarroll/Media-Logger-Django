@@ -20,13 +20,15 @@ def user(request, username):
 
 
 def service(request, service_name):
-    query = MediaObject.objects.filter(service=service_name).order_by('-time_posted')
+    query = MediaObject.objects.filter(
+        service=service_name).order_by('-time_posted')
     data = serializers.serialize("json", query)
     return HttpResponse(data, content_type="application/json")
 
 
 def user_service(request, username, service_name):
-    query = MediaObject.objects.filter(user=username, service=service_name).order_by('-time_posted')
+    query = MediaObject.objects.filter(
+        user=username, service=service_name).order_by('-time_posted')
     data = serializers.serialize("json", query)
     return HttpResponse(data, content_type="application/json")
 
@@ -40,16 +42,18 @@ def create(request):
 
         media_object = MediaObject()
         media_object.url = request.POST['url']
+        media_object.artist = request.POST['artist']
+        media_object.title = request.POST['title']
         media_object.user = request.POST['username']
-        media_object.time_posted = request.POST['timestamp']
         media_object.service = request.POST['service_name']
-        if media_object.service != 'Soundcloud':
-            media_object.title = request.POST['title']
-            media_object.thumbnail_url = request.POST['thumbnail_url']
-        media_object.save()
+        media_object.time_posted = request.POST['timestamp']
 
+        if media_object.service != 'Soundcloud':
+            media_object.thumbnail_url = request.POST['thumbnail_url']
+
+        media_object.save()
+        print('Media object created')
         return HttpResponse('Media object successfully created.')
     except Exception as e:
+        print(e)
         return HttpResponse("error: " + str(e))
-
-
