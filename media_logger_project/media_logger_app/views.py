@@ -36,12 +36,12 @@ def user_service(request, username, service_name):
 @csrf_exempt
 def create(request):
     try:
-        if MediaObject.objects.filter(url=request.POST['url']):
+        if MediaObject.objects.filter(url=request.POST.get('url', '')):
             print("Object already exists.")
             return HttpResponse("Media object already exists.")
 
         media_object = MediaObject()
-        media_object.url = request.POST.get['url', '']
+        media_object.url = request.POST.get('url', '')
         media_object.artist = request.POST['artist']
         media_object.title = request.POST['title']
         media_object.user = request.POST['username']
