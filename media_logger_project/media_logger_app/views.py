@@ -42,14 +42,14 @@ def create(request):
 
         media_object = MediaObject()
         media_object.url = request.POST.get('url', '')
-        media_object.artist = request.POST['artist']
-        media_object.title = request.POST['title']
-        media_object.user = request.POST['username']
-        media_object.service = request.POST['service_name']
-        media_object.time_posted = request.POST['timestamp']
+        media_object.artist = request.POST.get('artist', '')
+        media_object.title = request.POST.get('title', '')
+        media_object.user = request.POST.get('username', '')
+        media_object.service = request.POST.get('service_name', '')
+        media_object.time_posted = request.POST.get('timestamp', '')
 
         if media_object.service != 'Soundcloud':
-            media_object.thumbnail_url = request.POST['thumbnail_url']
+            media_object.thumbnail_url = request.POST.get('thumbnail_url', '')
 
         media_object.save()
         print('Media object created')
