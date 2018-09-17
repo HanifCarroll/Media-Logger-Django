@@ -132,8 +132,3 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 django_heroku.settings(locals())
-
-try:
-    from local_settings import DATABASES
-except ImportError:
-    pass
