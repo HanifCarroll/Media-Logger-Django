@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 
 from .models import MediaObject
+from .utils import get_thumbnail
 
 
 def index(request):
@@ -36,20 +37,26 @@ def user_service(request, username, service_name):
 @csrf_exempt
 def create(request):
     try:
-        if MediaObject.objects.filter(url=request.POST.get('url', '')):
+        url = request.POST['url']
+        if MediaObject.objects.filter(url=url):
             print("Object already exists.")
             return HttpResponse("Media object already exists.")
 
+        # This info will be there
         media_object = MediaObject()
-        media_object.url = request.POST.get('url', '')
+        media_object.url = url
+        media_object.user = request.POST['username']
+        media_object.service = request.POST['service_name']
+        media_object.time_posted = request.POST['timestamp']
+
+        # This info might not be there, so we use .get
         media_object.artist = request.POST.get('artist', '')
         media_object.title = request.POST.get('title', '')
-        media_object.user = request.POST.get('username', '')
-        media_object.service = request.POST.get('service_name', '')
-        media_object.time_posted = request.POST.get('timestamp', '')
 
         if media_object.service != 'Soundcloud':
-            media_object.thumbnail_url = request.POST.get('thumbnail_url', '')
+            thumbnail_url = request.POST.get('thumbnail_url', '')
+            if thumbnail_url is not '':
+                media_object.thumbnail_url = get_thumbnail(thumbnail_url)
 
         media_object.save()
         print('Media object created')
